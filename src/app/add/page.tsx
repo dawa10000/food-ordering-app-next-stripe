@@ -83,7 +83,7 @@ const AddPage = () => {
 
     try {
       const url = await upload();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products`, {
+      const res = await fetch("/api/products", {
         method: "POST",
         body: JSON.stringify({
           img: url,

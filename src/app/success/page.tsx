@@ -11,12 +11,9 @@ const SuccessPage = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/api/confirm/${payment_intent}`,
-          {
-            method: "PUT",
-          },
-        );
+        await fetch(`/api/confirm/${payment_intent}`, {
+          method: "PUT",
+        });
         setTimeout(() => {
           router.push("/orders");
         }, 5000);
