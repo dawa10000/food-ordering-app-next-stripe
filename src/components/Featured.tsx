@@ -1,6 +1,7 @@
 import { ProductType } from "@/types/types";
 import { prisma } from "@/utils/connect";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const getData = async () => {
@@ -28,9 +29,10 @@ const Featured = async () => {
       <div className="w-max flex">
         {/* SINGLE ITEM */}
         {featuredProducts.map((item) => (
-          <div
+          <Link
+            href={`/product/${item.id}`}
             key={item.id}
-            className="w-screen h-[60vh] flex flex-col items-center justify-around p-4 hover:bg-fuchsia-50 transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh]"
+            className="w-screen h-[60vh] flex flex-col items-center justify-around p-4 cursor-pointer hover:bg-fuchsia-50 transition-all duration-300 md:w-[50vw] xl:w-[33vw] xl:h-[90vh]"
           >
             {/* IMAGE CONTAINER */}
             {item.img && (
@@ -45,11 +47,11 @@ const Featured = async () => {
               </h1>
               <p className="p-4 2xl:p-8">{item.desc}</p>
               <span className="text-xl font-bold">${item.price}</span>
-              <button className="bg-red-500 text-white p-2 rounded-md">
+              <span className="bg-red-500 text-white p-2 rounded-md">
                 Add to Cart
-              </button>
+              </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
