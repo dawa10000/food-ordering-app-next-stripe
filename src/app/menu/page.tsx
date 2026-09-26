@@ -2,6 +2,8 @@ import { MenuType } from "@/types/types";
 import Link from "next/link";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const getData = async () => {
   const res = await fetch(`${process.env.APP_URL}/api/categories`, {
     cache: "no-store",
