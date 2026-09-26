@@ -1,21 +1,25 @@
 import { ProductType } from "@/types/types";
+import { prisma } from "@/utils/connect";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const getData = async (category: string) => {
-  const res = await fetch(
-    `${process.env.APP_URL}/api/products?cat=${category}`,
-    {
-      cache: "no-store",
-    },
-  );
+  const products = await prisma.product.findMany({
+    where: { catSlug: category },
+  });
 
-  if (!res.ok) {
-    throw new Error("Failed!");
-  }
-
-  return res.json();
+  return products.map((product) => ({
+    ...product,
+    img: product.img ?? undefined,
+    price: product.price.toNumber(),
+    options: product.options.map((option: any) => ({
+      ...option,
+      additionalPrice: Number(option.additionalPrice),
+    })),
+  }));
 };
 
 type Props = {

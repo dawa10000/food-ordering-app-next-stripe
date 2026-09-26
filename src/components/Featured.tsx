@@ -1,17 +1,22 @@
 import { ProductType } from "@/types/types";
+import { prisma } from "@/utils/connect";
 import Image from "next/image";
 import React from "react";
 
 const getData = async () => {
-  const res = await fetch(`${process.env.APP_URL}/api/products`, {
-    cache: "no-store",
+  const products = await prisma.product.findMany({
+    where: { isFeatured: true },
   });
 
-  if (!res.ok) {
-    throw new Error("Failed!");
-  }
-
-  return res.json();
+  return products.map((product) => ({
+    ...product,
+    img: product.img ?? undefined,
+    price: product.price.toNumber(),
+    options: product.options.map((option: any) => ({
+      ...option,
+      additionalPrice: Number(option.additionalPrice),
+    })),
+  }));
 };
 
 const Featured = async () => {

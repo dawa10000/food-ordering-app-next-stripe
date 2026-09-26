@@ -1,19 +1,30 @@
 import DeleteButton from "@/components/DeleteButton";
 import Price from "@/components/Price";
 import { ProductType } from "@/types/types";
+import { prisma } from "@/utils/connect";
 import Image from "next/image";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const getData = async (id: string) => {
-  const res = await fetch(`${process.env.APP_URL}/api/products/${id}`, {
-    cache: "no-store",
+  const product = await prisma.product.findUnique({
+    where: { id },
   });
 
-  if (!res.ok) {
+  if (!product) {
     throw new Error("Failed!");
   }
 
-  return res.json();
+  return {
+    ...product,
+    img: product.img ?? undefined,
+    price: product.price.toNumber(),
+    options: product.options.map((option: any) => ({
+      ...option,
+      additionalPrice: Number(option.additionalPrice),
+    })),
+  };
 };
 
 const SingleProductPage = async ({ params }: { params: { id: string } }) => {
