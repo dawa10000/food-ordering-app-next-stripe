@@ -11,9 +11,12 @@ const SuccessPage = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await fetch(`http://localhost:3000/api/confirm/${payment_intent}`, {
-          method: "PUT",
-        });
+        await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/api/confirm/${payment_intent}`,
+          {
+            method: "PUT",
+          },
+        );
         setTimeout(() => {
           router.push("/orders");
         }, 5000);
@@ -32,8 +35,7 @@ const SuccessPage = () => {
           Payment successful. You are being redirected to the orders page.
           Please do not close the page.
         </p>
-      <ConfettiExplosion className="absolute m-auto"
-      />
+        <ConfettiExplosion className="absolute m-auto" />
       </div>
     </>
   );

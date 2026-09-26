@@ -45,7 +45,7 @@ const AddPage = () => {
   }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
@@ -83,7 +83,7 @@ const AddPage = () => {
 
     try {
       const url = await upload();
-      const res = await fetch("http://localhost:3000/api/products", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products`, {
         method: "POST",
         body: JSON.stringify({
           img: url,
@@ -192,7 +192,7 @@ const AddPage = () => {
                 className="p-2  rounded-md cursor-pointer bg-gray-200 text-gray-400"
                 onClick={() =>
                   setOptions((prev) =>
-                    prev.filter((item) => item.title !== opt.title)
+                    prev.filter((item) => item.title !== opt.title),
                   )
                 }
               >
