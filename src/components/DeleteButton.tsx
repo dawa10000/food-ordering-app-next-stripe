@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { parseJsonResponse } from "@/utils/parseJsonResponse";
 
 const DeleteButton = ({ id }: { id: string }) => {
   const { data: session, status } = useSession();
@@ -18,16 +19,15 @@ const DeleteButton = ({ id }: { id: string }) => {
   }
 
   const handleDelete = async () => {
-    const res = await fetch(`/api/products/${id}`, {
-      method: "DELETE",
-    });
-
-    if (res.status === 200) {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
+      await parseJsonResponse(res);
       router.push("/menu");
       toast("The product has been deleted!");
-    } else {
-      const data = await res.json();
-      toast.error(data.message);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete failed");
     }
   };
 

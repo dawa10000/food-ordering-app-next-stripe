@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
+import { parseJsonResponse } from "@/utils/parseJsonResponse";
 
 const SuccessPage = () => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const SuccessPage = () => {
       try {
         await fetch(`/api/confirm/${payment_intent}`, {
           method: "PUT",
-        });
+        }).then(parseJsonResponse);
         setTimeout(() => {
           router.push("/orders");
         }, 5000);

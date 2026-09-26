@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { parseJsonResponse } from "@/utils/parseJsonResponse";
 
 type Inputs = {
   title: string;
@@ -92,7 +93,7 @@ const AddPage = () => {
         }),
       });
 
-      const data = await res.json();
+      const data = await parseJsonResponse<{ id: string }>(res);
 
       router.push(`/product/${data.id}`);
     } catch (err) {

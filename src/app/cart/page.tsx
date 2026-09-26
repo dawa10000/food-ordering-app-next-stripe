@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { parseJsonResponse } from "@/utils/parseJsonResponse";
 
 const CartPage = () => {
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
@@ -29,7 +30,7 @@ const CartPage = () => {
             userEmail: session.user.email,
           }),
         });
-        const data = await res.json();
+        const data = await parseJsonResponse<{ id: string }>(res);
         router.push(`/pay/${data.id}`);
       } catch (err) {
         console.log(err);

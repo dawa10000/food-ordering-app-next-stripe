@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
+import { parseJsonResponse } from "@/utils/parseJsonResponse";
 
 const OrdersPage = () => {
   const { data: session, status } = useSession();
@@ -17,9 +18,14 @@ const OrdersPage = () => {
     router.push("/");
   }
 
-  const { isLoading, error, data } = useQuery({
+  const {
+    isLoading,
+    error,
+    data = [],
+  } = useQuery({
     queryKey: ["orders"],
-    queryFn: () => fetch("/api/orders").then((res) => res.json()),
+    queryFn: () =>
+      fetch("/api/orders").then((res) => parseJsonResponse<OrderType[]>(res)),
   });
 
   const queryClient = useQueryClient();
@@ -32,7 +38,7 @@ const OrdersPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(status),
-      });
+      }).then(parseJsonResponse);
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
