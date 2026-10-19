@@ -34,6 +34,7 @@ const AddPage = () => {
 
   const [options, setOptions] = useState<Option[]>([]);
   const [file, setFile] = useState<File>();
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -65,22 +66,33 @@ const AddPage = () => {
   };
 
   const upload = async () => {
+    if (!file) {
+      throw new Error("Choose an image before adding the product.");
+    }
+
     const data = new FormData();
-    data.append("file", file!);
+    data.append("file", file);
     data.append("upload_preset", "restaurant");
 
-    const res = await fetch("https://api.cloudinary.com/v1_1/lamadev/image", {
-      method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
-      body: data,
-    });
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/lamadev/image/upload",
+      {
+        method: "POST",
+        body: data,
+      },
+    );
 
     const resData = await res.json();
+    if (!res.ok || !resData.url) {
+      throw new Error(resData.error?.message || "Image upload failed.");
+    }
+
     return resData.url;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
 
     try {
       const url = await upload();
@@ -98,6 +110,7 @@ const AddPage = () => {
       router.push(`/product/${data.id}`);
     } catch (err) {
       console.log(err);
+      setError(err instanceof Error ? err.message : "Could not add product.");
     }
   };
 
@@ -107,6 +120,11 @@ const AddPage = () => {
         <h1 className="text-4xl mb-2 text-gray-300 font-bold">
           Add New Product
         </h1>
+        {error && (
+          <p role="alert" className="w-full text-red-700">
+            {error}
+          </p>
+        )}
         <div className="w-full flex flex-col gap-2 ">
           <label
             className="text-sm cursor-pointer flex gap-4 items-center"
@@ -180,6 +198,7 @@ const AddPage = () => {
               onChange={changeOption}
             />
             <button
+              type="button"
               className="bg-gray-500 p-2 text-white"
               onClick={() => setOptions((prev) => [...prev, option])}
             >
