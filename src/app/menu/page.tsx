@@ -17,15 +17,13 @@ const MenuPage = async () => {
         <Link
           href={`/menu/${category.slug}`}
           key={category.id}
-          className="w-full h-1/3 bg-cover p-8 md:h-1/2"
+          className="w-full h-1/3 bg-cover p-8 md:relative md:h-1/2"
           style={{ backgroundImage: `url(${category.img})` }}
         >
           <div className={`text-${category.color} w-1/2`}>
             <h1 className="uppercase font-bold text-3xl">{category.title}</h1>
             <p className="text-sm my-8">{category.desc}</p>
-            <span
-              className={`inline-block cursor-pointer bg-${category.color} text-${category.color === "black" ? "white" : "red-500"} py-2 px-4 rounded-md`}
-            >
+            <span className="inline-block cursor-pointer rounded-md bg-black px-4 py-2 text-white md:absolute md:bottom-4 md:left-8">
               Explore
             </span>
           </div>

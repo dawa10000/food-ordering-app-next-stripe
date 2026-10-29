@@ -1,13 +1,10 @@
 "use client";
 import { useCartStore } from "@/utils/store";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 
 const CartIcon = () => {
-  const { data: session, status } = useSession();
-
   const { totalItems } = useCartStore();
 
   useEffect(() => {
@@ -29,13 +26,7 @@ const CartIcon = () => {
             className="object-contain"
           />
         </div>
-        {session?.user.isAdmin ? (
-          <button className="p-1 bg-red-500 text-white rounded-md">
-            Add product
-          </button>
-        ) : (
-          <span>Cart ({totalItems})</span>
-        )}
+        <span>Cart ({totalItems})</span>
       </div>
     </Link>
   );
